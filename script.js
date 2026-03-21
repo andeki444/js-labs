@@ -1,200 +1,341 @@
-// 1. треугольник
-function triangle(a, b, c) {
+// ================= LIKE (одна кнопка) =================
 
-  if (a + b > c && a + c > b && b + c > a) {
+const likeBtn = document.getElementById("likeBtn");
+const likeText = document.getElementById("likeText");
 
-    const perimeter = a + b + c;
-    const p = perimeter / 2;
-    const area = Math.sqrt(p * (p - a) * (p - b) * (p - c));
-    const ratio = perimeter / area;
+function handleLikeClick() {
+  const active = likeBtn.classList.contains("active");
 
-    console.log("№1.\nтреугольник существует");
-    console.log("периметр =", perimeter);
-    console.log("площадь =", area);
-    console.log("соотношение =", ratio);
-
+  if (active) {
+    likeBtn.classList.remove("active");
+    likeBtn.setAttribute("aria-pressed", "false");
+    likeText.textContent = "";
   } else {
-    console.log("№1.\nтреугольника не существует");
+    likeBtn.classList.add("active");
+    likeBtn.setAttribute("aria-pressed", "true");
+    likeText.textContent = "Лайк";
   }
 }
 
-triangle(3, 4, 5);
+likeBtn.addEventListener("click", handleLikeClick);
 
 
-// 2. физ баз
-function fizzBuzz(max) {
+// ================= LIKE / DISLIKE =================
 
-  for (let i = 0; i <= max; i++) {
+const likeBtn2 = document.getElementById("likeBtn2");
+const dislikeBtn = document.getElementById("dislikeBtn");
+const likeDislikeText = document.getElementById("likeDislikeText");
 
-    if (i % 5 === 0 && i !== 0) {
-      console.log("№2.\n", i, "fizz buzz");
-    }
-    else if (i % 2 === 0) {
-      console.log("№2.\n", i, "buzz");
-    }
-    else {
-      console.log("№2.\n", i, "fizz");
-    }
+function handleLike2Click() {
+  const active = likeBtn2.classList.contains("active");
 
-  }
-}
-
-fizzBuzz(6);
-
-
-// 3. ёлка
-function tree(height) {
-
-  let result = "";
-
-  for (let i = 1; i <= height; i++) {
-
-    const symbol = (i % 2 === 0) ? "#" : "*";
-
-    for (let j = 0; j < i; j++) {
-      result = result + symbol;
-    }
-
-    result = result + "\n";
-  }
-
-  result = result + "||";
-
-  console.log("№3.\n" + result);
-}
-
-tree(6);
-
-
-// 4. деление
-function divide(n, x, y) {
-
-  if (n % x === 0 && n % y === 0) {
-    return true;
+  if (active) {
+    likeBtn2.classList.remove("active");
+    likeBtn2.setAttribute("aria-pressed", "false");
+    likeDislikeText.textContent = "";
   } else {
-    return false;
-  }
+    likeBtn2.classList.add("active");
+    likeBtn2.setAttribute("aria-pressed", "true");
 
+    dislikeBtn.classList.remove("active");
+    dislikeBtn.setAttribute("aria-pressed", "false");
+
+    likeDislikeText.textContent = "Нравится";
+  }
 }
 
-const n = 12;
-const x = 2;
-const y = 6;
+function handleDislikeClick() {
+  const active = dislikeBtn.classList.contains("active");
 
-console.log("№4.\n n =", n, "x =", x, "y =", y, "=>", divide(n, x, y));
-
-
-// 5. сэндвичи
-function countSandwiches(obj) {
-
-  const bread = obj.bread;
-  const cheese = obj.cheese;
-
-  const byBread = Math.floor(bread / 2);
-
-  if (byBread < cheese) {
-    return byBread;
+  if (active) {
+    dislikeBtn.classList.remove("active");
+    dislikeBtn.setAttribute("aria-pressed", "false");
+    likeDislikeText.textContent = "";
   } else {
-    return cheese;
-  }
+    dislikeBtn.classList.add("active");
+    dislikeBtn.setAttribute("aria-pressed", "true");
 
+    likeBtn2.classList.remove("active");
+    likeBtn2.setAttribute("aria-pressed", "false");
+
+    likeDislikeText.textContent = "Не нравится";
+  }
 }
 
-console.log("№5.\n", countSandwiches({ bread: 5, cheese: 6 }));
+likeBtn2.addEventListener("click", handleLike2Click);
+dislikeBtn.addEventListener("click", handleDislikeClick);
 
 
-// 6. модуль
-function absValue(x) {
+// ================= КОРЗИНА =================
 
-  if (x < 0) {
-    return -x;
-  } else {
-    return x;
+const cartCount = document.getElementById("cartCount");
+const cardsContainer = document.getElementById("cards");
+
+const products = [
+  {
+    id: 1,
+    name: "Картинка 1",
+    img: "img/product1.jpg"
+  },
+  {
+    id: 2,
+    name: "Картинка 2",
+    img: "img/product2.jpg"
+  },
+  {
+    id: 3,
+    name: "Картинка 3",
+    img: "img/product3.png"
+  }
+];
+
+/* список товаров в корзине */
+let cartItems = [];
+
+function handleAddToCart(event) {
+
+  const button = event.currentTarget;
+  const productId = Number(button.dataset.id);
+
+  if (cartItems.includes(productId)) {
+    return;
   }
 
+  cartItems.push(productId);
+
+  const current = Number(cartCount.textContent);
+  cartCount.textContent = current + 1;
+
+  button.disabled = true;
+  button.textContent = "Добавлено";
 }
 
-console.log("№6\n", absValue(-2));
+function createCard(product) {
 
+  const card = document.createElement("div");
+  card.className = "card";
 
-// 7. температура
-function convertTemperature(value, direction) {
+  const img = document.createElement("img");
+  img.src = product.img;
+  img.alt = product.name;
 
-  if (direction === "toC") {
-    const c = (value - 32) * 5 / 9;
-    return c + " C";
+  const text = document.createElement("div");
+  text.className = "card-body";
+  text.textContent = product.name;
+
+  const footer = document.createElement("div");
+  footer.className = "card-footer";
+
+  const btn = document.createElement("button");
+  btn.className = "btn";
+  btn.textContent = "В корзину";
+
+  btn.dataset.id = product.id;
+
+  btn.addEventListener("click", handleAddToCart);
+
+  footer.appendChild(btn);
+
+  card.appendChild(img);
+  card.appendChild(text);
+  card.appendChild(footer);
+
+  cardsContainer.appendChild(card);
+}
+
+for (let i = 0; i < products.length; i++) {
+  createCard(products[i]);
+}
+
+// ================= СОРТИРОВКА =================
+
+const numbersWrapper = document.getElementById("numbersListWrapper");
+const sortAsc = document.getElementById("sortAsc");
+const sortDesc = document.getElementById("sortDesc");
+const sortReset = document.getElementById("sortReset");
+
+const originalNumbers = [];
+for (let i = 0; i < 10; i++) {
+  originalNumbers.push(Math.floor(Math.random() * 100));
+}
+
+let currentNumbers = originalNumbers.slice();
+
+function renderNumbers(arr) {
+  while (numbersWrapper.firstChild) {
+    numbersWrapper.removeChild(numbersWrapper.firstChild);
   }
 
-  if (direction === "toF") {
-    const f = value * 9 / 5 + 32;
-    return f + " F";
-  }
-
-}
-
-console.log("№7.\n", convertTemperature(32, "toC"), "\n", convertTemperature(10, "toF"));
-
-
-// 8. случайное число
-function randomNumber(min, max) {
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-
-}
-
-console.log("№8.\n", randomNumber(0, 10));
-
-
-// 9. случайные элементы
-function sampleArray(arr, count) {
-
-  const result = [];
-
-  for (let i = 0; i < count; i++) {
-
-    const index = randomNumber(0, arr.length - 1);
-    result.push(arr[index]);
-
-  }
-
-  return result;
-}
-
-console.log("№9.\n", sampleArray([1, 2, 3, 4], 2));
-
-
-// 10. свой фильтер
-function myFilterArray(arr, func) {
-
-  const result = [];
+  const ul = document.createElement("ul");
 
   for (let i = 0; i < arr.length; i++) {
+    const li = document.createElement("li");
+    li.textContent = arr[i];
+    ul.appendChild(li);
+  }
 
-    if (func(arr[i])) {
-      result.push(arr[i]);
+  numbersWrapper.appendChild(ul);
+}
+
+function handleSortAsc() {
+  currentNumbers = currentNumbers.slice().sort(function(a, b) {
+    return a - b;
+  });
+  renderNumbers(currentNumbers);
+}
+
+function handleSortDesc() {
+  currentNumbers = currentNumbers.slice().sort(function(a, b) {
+    return b - a;
+  });
+  renderNumbers(currentNumbers);
+}
+
+function handleSortReset() {
+  currentNumbers = originalNumbers.slice();
+  renderNumbers(currentNumbers);
+}
+
+sortAsc.addEventListener("click", handleSortAsc);
+sortDesc.addEventListener("click", handleSortDesc);
+sortReset.addEventListener("click", handleSortReset);
+
+renderNumbers(currentNumbers);
+
+
+// ================= ГАЛЕРЕЯ =================
+
+const gallery = document.getElementById("gallery");
+const copied = document.getElementById("copied");
+const moveBtn = document.getElementById("moveBtn");
+const deleteBtn = document.getElementById("deleteBtn");
+
+let selected = [];
+let selectionMode = false;
+
+function updateButtons() {
+  const active = selected.length > 0;
+  moveBtn.disabled = !active;
+  deleteBtn.disabled = !active;
+}
+
+function updateNumbers() {
+  const photos = gallery.querySelectorAll(".photo");
+
+  for (let i = 0; i < photos.length; i++) {
+    const badge = photos[i].querySelector(".badge");
+    if (badge) {
+      photos[i].removeChild(badge);
     }
-
   }
 
-  return result;
+  for (let i = 0; i < selected.length; i++) {
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = i + 1;
+    selected[i].appendChild(badge);
+  }
 }
 
-function isFirstV(name) {
-  return name.startsWith("V");
-}
+function handlePhotoClick(event) {
+  const el = event.currentTarget;
 
-console.log("№10.\n", myFilterArray(["Short", "VeryLong"], isFirstV));
+  if (!selectionMode) return;
 
+  const index = selected.indexOf(el);
 
-// 11. плавающая запятая
-function toBeCloseTo(num1, num2) {
-
-  if (Math.abs(num1 - num2) < Number.EPSILON) {
-    return true;
+  if (index !== -1) {
+    selected.splice(index, 1);
+    el.classList.remove("active");
+    if (selected.length === 0) {
+      selectionMode = false;
+    }
   } else {
-    return false;
+    selected.push(el);
+    el.classList.add("active");
   }
 
+  updateNumbers();
+  updateButtons();
 }
 
-console.log("№11.\n", toBeCloseTo(0.1 + 0.2, 0.3));
+function handleLongPress(event) {
+  const el = event.currentTarget;
+
+  if (selectionMode) return;
+
+  selectionMode = true;
+  selected = [el];
+  el.classList.add("active");
+
+  updateNumbers();
+  updateButtons();
+}
+
+function addLongPress(el) {
+  let timer = null;
+
+  function onMouseDown() {
+    timer = setTimeout(function() {
+      handleLongPress({ currentTarget: el });
+    }, 1000);
+  }
+
+  function onMouseUp() {
+    clearTimeout(timer);
+  }
+
+  el.addEventListener("mousedown", onMouseDown);
+  el.addEventListener("mouseup", onMouseUp);
+  el.addEventListener("mouseleave", onMouseUp);
+}
+
+const galleryImages = [
+  "img/gallery1.jpg",
+  "img/gallery2.jpg",
+  "img/gallery3.jpg",
+  "img/gallery4.jpg",
+  "img/gallery5.jpg",
+  "img/gallery6.png",
+  "img/gallery7.jpg",
+  "img/gallery8.jpg",
+  "img/gallery9.jpg",
+  "img/gallery10.jpg"
+];
+
+for (let i = 0; i < galleryImages.length; i++) {
+
+  const photo = document.createElement("div");
+  photo.className = "photo";
+
+  const img = document.createElement("img");
+  img.src = galleryImages[i];
+  img.alt = "Фото " + (i + 1);
+
+  photo.appendChild(img);
+  gallery.appendChild(photo);
+
+  addLongPress(photo);
+  photo.addEventListener("click", handlePhotoClick);
+}
+
+function handleDelete() {
+  for (let i = 0; i < selected.length; i++) {
+    selected[i].remove();
+  }
+  selected = [];
+  selectionMode = false;
+  updateButtons();
+}
+
+function handleMove() {
+  for (let i = 0; i < selected.length; i++) {
+    copied.appendChild(selected[i]);
+  }
+  selected = [];
+  selectionMode = false;
+  updateButtons();
+}
+
+moveBtn.addEventListener("click", handleMove);
+deleteBtn.addEventListener("click", handleDelete);

@@ -1,14 +1,72 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Лабораторная работа №1</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Киселёв Денис Александрович группа 251-3210 - Лабораторная работа №2</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Киселёв Денис Александрович группа 251-3210 лабораторная работа №1</h1>
+<header class="site-header">
+  <h1>Киселёв Денис Александрович группа 251-3210 — Лабораторная работа №2</h1>
+</header>
+
+<main class="container">
+
+  <!-- Like -->
+  <section class="task" id="likeSection">
+    <button id="likeBtn" class="btn" aria-pressed="false">👍</button>
+    <p id="likeText" class="state-text"></p>
+  </section>
+
+  <!-- Like / Dislike -->
+  <section class="task" id="likeDislikeSection">
+    <button id="likeBtn2" class="btn" aria-pressed="false">👍</button>
+    <button id="dislikeBtn" class="btn" aria-pressed="false">👎</button>
+
+    <p id="likeDislikeText" class="state-text"></p>
+  </section>
+
+  <!-- Корзина -->
+  <section class="task" id="cartSection">
+    <div class="header-right">
+      <div class="cart" id="cartIcon" aria-label="Корзина">
+        🛒
+        <span id="cartCount" class="cart-count" aria-live="polite">0</span>
+      </div>
+    </div>
+    <div id="cards" class="cards"></div>
+  </section>
+
+  <!-- Сортировка -->
+  <section class="task" id="sortSection">
+    <h2>Сортировка</h2>
+    <div class="controls">
+      <button id="sortAsc" class="btn">По возрастанию</button>
+      <button id="sortDesc" class="btn">По убыванию</button>
+      <button id="sortReset" class="btn">Исходный</button>
+    </div>
+    <div id="numbersListWrapper" class="numbers"></div>
+  </section>
+
+  <!-- Галерея -->
+  <section class="task" id="gallerySection">
+    <h2>Галерея</h2>
+
+    <div class="gallery-controls">
+      <button id="moveBtn" class="btn" disabled>Перенести</button>
+      <button id="deleteBtn" class="btn" disabled>Удалить</button>
+    </div>
+
+    <div id="gallery" class="gallery" aria-label="Галерея фотографий"></div>
+
+    <h3>Скопированные</h3>
+    <div id="copied" class="copied" aria-live="polite"></div>
+  </section>
+
+</main>
 
 <script src="script.js"></script>
-
 </body>
 </html>
