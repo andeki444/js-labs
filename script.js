@@ -1,200 +1,224 @@
-// 1. треугольник
-function triangle(a, b, c) {
+// --- Элементы DOM ---
+const modal = document.getElementById('modal');
+const openModalBtn = document.getElementById('openModalBtn');
+const closeModalBtn = document.getElementById('closeModalBtn');
+const closeFormBtn = document.getElementById('closeFormBtn');
+const form = document.getElementById('registrationForm');
+const showPasswordBtn = document.getElementById('showPasswordBtn');
+const passwordInput = document.getElementById('password');
+const userCard = document.getElementById('userCard');
+const cardContent = document.getElementById('cardContent');
 
-  if (a + b > c && a + c > b && b + c > a) {
+// --- Поля формы для валидации ---
+const fields = 
+[
+    { input: document.getElementById('name'), error: document.getElementById('nameError') },
+    { input: document.getElementById('email'), error: document.getElementById('emailError') },
+    { input: document.getElementById('phone'), error: document.getElementById('phoneError') },
+    { input: document.getElementById('age'), error: document.getElementById('ageError') },
+    { input: document.getElementById('github'), error: document.getElementById('githubError') },
+    { input: document.getElementById('githubDate'), error: document.getElementById('githubDateError') },
+    { input: document.getElementById('password'), error: document.getElementById('passwordError') }
+];
 
-    const perimeter = a + b + c;
-    const p = perimeter / 2;
-    const area = Math.sqrt(p * (p - a) * (p - b) * (p - c));
-    const ratio = perimeter / area;
+// --- Вспомогательные функции ---
 
-    console.log("№1.\nтреугольник существует");
-    console.log("периметр =", perimeter);
-    console.log("площадь =", area);
-    console.log("соотношение =", ratio);
-
-  } else {
-    console.log("№1.\nтреугольника не существует");
-  }
+function validatePhoneNumber(value) {
+    if (value) return true;
+    const digits = value.replace(/\D/g, '');
+    return digits.length === 10 || digits.length === 11;
 }
 
-triangle(3, 4, 5);
-
-
-// 2. физ баз
-function fizzBuzz(max) {
-
-  for (let i = 0; i <= max; i++) {
-
-    if (i % 5 === 0 && i !== 0) {
-      console.log("№2.\n", i, "fizz buzz");
+function formatPhoneNumber(value) {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length === 11 && digits[0] === '7') {
+        return '+7 (' + digits.substring(1, 4) + ') ' + digits.substring(4, 7) + '-' + digits.substring(7, 9) + '-' + digits.substring(9, 11);
+    } else if (digits.length === 11 && digits[0] === '8') {
+        return '+7 (' + digits.substring(1, 4) + ') ' + digits.substring(4, 7) + '-' + digits.substring(7, 9) + '-' + digits.substring(9, 11);
+    } else if (digits.length === 10) {
+        return '+7 (' + digits.substring(0, 3) + ') ' + digits.substring(3, 6) + '-' + digits.substring(6, 8) + '-' + digits.substring(8, 10);
     }
-    else if (i % 2 === 0) {
-      console.log("№2.\n", i, "buzz");
-    }
-    else {
-      console.log("№2.\n", i, "fizz");
-    }
-
-  }
+    return value;
 }
 
-fizzBuzz(6);
+function validateField(fieldObj) {
+    const input = fieldObj.input;
+    const value = input.value.trim();
+    let errorMessage = '';
 
-
-// 3. ёлка
-function tree(height) {
-
-  let result = "";
-
-  for (let i = 1; i <= height; i++) {
-
-    const symbol = (i % 2 === 0) ? "#" : "*";
-
-    for (let j = 0; j < i; j++) {
-      result = result + symbol;
-    }
-
-    result = result + "\n";
-  }
-
-  result = result + "||";
-
-  console.log("№3.\n" + result);
-}
-
-tree(6);
-
-
-// 4. деление
-function divide(n, x, y) {
-
-  if (n % x === 0 && n % y === 0) {
-    return true;
-  } else {
-    return false;
-  }
-
-}
-
-const n = 12;
-const x = 2;
-const y = 6;
-
-console.log("№4.\n n =", n, "x =", x, "y =", y, "=>", divide(n, x, y));
-
-
-// 5. сэндвичи
-function countSandwiches(obj) {
-
-  const bread = obj.bread;
-  const cheese = obj.cheese;
-
-  const byBread = Math.floor(bread / 2);
-
-  if (byBread < cheese) {
-    return byBread;
-  } else {
-    return cheese;
-  }
-
-}
-
-console.log("№5.\n", countSandwiches({ bread: 5, cheese: 6 }));
-
-
-// 6. модуль
-function absValue(x) {
-
-  if (x < 0) {
-    return -x;
-  } else {
-    return x;
-  }
-
-}
-
-console.log("№6\n", absValue(-2));
-
-
-// 7. температура
-function convertTemperature(value, direction) {
-
-  if (direction === "toC") {
-    const c = (value - 32) * 5 / 9;
-    return c + " C";
-  }
-
-  if (direction === "toF") {
-    const f = value * 9 / 5 + 32;
-    return f + " F";
-  }
-
-}
-
-console.log("№7.\n", convertTemperature(32, "toC"), "\n", convertTemperature(10, "toF"));
-
-
-// 8. случайное число
-function randomNumber(min, max) {
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-
-}
-
-console.log("№8.\n", randomNumber(0, 10));
-
-
-// 9. случайные элементы
-function sampleArray(arr, count) {
-
-  const result = [];
-
-  for (let i = 0; i < count; i++) {
-
-    const index = randomNumber(0, arr.length - 1);
-    result.push(arr[index]);
-
-  }
-
-  return result;
-}
-
-console.log("№9.\n", sampleArray([1, 2, 3, 4], 2));
-
-
-// 10. свой фильтер
-function myFilterArray(arr, func) {
-
-  const result = [];
-
-  for (let i = 0; i < arr.length; i++) {
-
-    if (func(arr[i])) {
-      result.push(arr[i]);
+    if (input.validity.valueMissing) {
+        errorMessage = 'Поле обязательно для заполнения.';
+    } else if (input.validity.patternMismatch) {
+        if (input.id === 'name') {
+            errorMessage = 'Имя должно содержать только буквы и быть длиннее 1 символа.';
+        } else {
+            errorMessage = 'Значение не соответствует формату.';
+        }
+    } else if (input.validity.typeMismatch) {
+        if (input.type === 'email') {
+            errorMessage = 'Введите корректный email (например, name@domain.com).';
+        } else if (input.type === 'url') {
+            errorMessage = 'Введите корректный URL (например, https://github.com/username).';
+        } else {
+            errorMessage = 'Неверный формат данных.';
+        }
+    } else if (input.validity.tooShort) {
+        errorMessage = `Минимальная длина — ${input.minLength} символа.`;
+    } else if (input.validity.rangeUnderflow) {
+        errorMessage = `Значение не может быть меньше ${input.min}.`;
+    } else if (input.validity.rangeOverflow) {
+        errorMessage = `Значение не может быть больше ${input.max}.`;
     }
 
-  }
+    if (errorMessage && input.id === 'phone' && value && !validatePhoneNumber(value)) {
+        errorMessage = 'Телефон должен содержать 10 или 11 цифр (например, +7 999 123 45 67).';
+    }
 
-  return result;
+    if (errorMessage && (input.id === 'github' || input.id === 'githubDate')) {
+        const githubInput = document.getElementById('github');
+        const dateInput = document.getElementById('githubDate');
+        const githubVal = githubInput.value.trim();
+        const dateVal = dateInput.value.trim();
+        
+        if ((githubVal && !dateVal) || (!githubVal && dateVal)) {
+            errorMessage = 'Заполните оба поля: ссылка на GitHub и дата регистрации.';
+        }
+    }
+
+    return errorMessage;
 }
 
-function isFirstV(name) {
-  return name.startsWith("V");
+function updateFieldValidation(fieldObj) {
+    const input = fieldObj.input;
+    const errorElement = fieldObj.error;
+    const errorMessage = validateField(fieldObj);
+
+    if (errorMessage) {
+        input.setAttribute('aria-invalid', 'true');
+        errorElement.textContent = errorMessage;
+        errorElement.removeAttribute('hidden');
+    } else {
+        input.removeAttribute('aria-invalid');
+        errorElement.textContent = '';
+        errorElement.setAttribute('hidden', '');
+    }
 }
 
-console.log("№10.\n", myFilterArray(["Short", "VeryLong"], isFirstV));
-
-
-// 11. плавающая запятая
-function toBeCloseTo(num1, num2) {
-
-  if (Math.abs(num1 - num2) < Number.EPSILON) {
-    return true;
-  } else {
-    return false;
-  }
-
+function validateAllFields() {
+    let allValid = true;
+    
+    fields.forEach(function(field) {
+        updateFieldValidation(field);
+        if (field.input.hasAttribute('aria-invalid')) {
+            allValid = false;
+        }
+    });
+    
+    return allValid;
 }
 
-console.log("№11.\n", toBeCloseTo(0.1 + 0.2, 0.3));
+// --- Обработчики событий ---
+
+function onOpenModalClick() {
+    modal.showModal();
+    form.reset();
+    
+    fields.forEach(function(field) {
+        field.input.removeAttribute('aria-invalid');
+        field.error.setAttribute('hidden', '');
+        field.error.textContent = '';
+    });
+}
+
+function onCloseModalClick() {
+    modal.close();
+}
+
+function onModalClick(event) {
+    if (event.target === modal) {
+        modal.close();
+    }
+}
+
+function onFieldBlur(event) {
+    const input = event.target;
+    const field = fields.find(function(f) {
+        return f.input === input;
+    });
+    
+    if (field) {
+        updateFieldValidation(field);
+    }
+}
+
+function onFormSubmit(event) {
+    event.preventDefault();
+
+    if (validateAllFields()) {
+        const formData = new FormData(form);
+        const data = {};
+        
+        formData.forEach(function(value, key) {
+            data[key] = value;
+        });
+
+        if (data.phone) {
+            data.phone = formatPhoneNumber(data.phone);
+        }
+
+        cardContent.innerHTML = 
+            '<p><strong>Имя:</strong> ' + (data.name || '—') + '</p>' +
+            '<p><strong>Email:</strong> ' + (data.email || '—') + '</p>' +
+            '<p><strong>Телефон:</strong> ' + (data.phone || '—') + '</p>' +
+            '<p><strong>Возраст:</strong> ' + (data.age || '—') + '</p>' +
+            '<p><strong>GitHub:</strong> ' + (data.github || '—') + '</p>' +
+            '<p><strong>Дата регистрации GitHub:</strong> ' + (data.githubDate || '—') + '</p>' +
+            '<p><strong>Пароль:</strong> ••••••</p>';
+
+        userCard.classList.remove('hidden');
+        modal.close();
+    } else {
+        const firstInvalid = fields.find(function(f) {
+            return f.input.hasAttribute('aria-invalid');
+        });
+        
+        if (firstInvalid) {
+            firstInvalid.input.focus();
+        }
+    }
+}
+
+function onShowPasswordPointerDown(event) {
+    event.preventDefault();
+    passwordInput.type = 'text';
+}
+
+function onShowPasswordPointerUp() {
+    passwordInput.type = 'password';
+}
+
+function onShowPasswordPointerLeave() {
+    passwordInput.type = 'password';
+}
+
+function onModalClose() {
+    passwordInput.type = 'password';
+}
+
+// --- Добавление обработчиков ---
+openModalBtn.addEventListener('click', onOpenModalClick);
+closeModalBtn.addEventListener('click', onCloseModalClick);
+closeFormBtn.addEventListener('click', onCloseModalClick);
+modal.addEventListener('click', onModalClick);
+
+fields.forEach(function(field) {
+    field.input.addEventListener('blur', onFieldBlur);
+});
+
+form.addEventListener('submit', onFormSubmit);
+
+showPasswordBtn.addEventListener('pointerdown', onShowPasswordPointerDown);
+showPasswordBtn.addEventListener('pointerup', onShowPasswordPointerUp);
+showPasswordBtn.addEventListener('pointerleave', onShowPasswordPointerLeave);
+
+modal.addEventListener('close', onModalClose);

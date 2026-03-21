@@ -1,14 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Лабораторная работа №1</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа 3 Киселёв Денис</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header class="header">
+        <div class="logo">Киселёв Денис формы</div>
+        <nav class="nav">
+            <a href="#">Главная</a>
+            <a href="#">О нас</a>
+            <a href="#">Контакты</a>
+            <button class="register-btn" id="openModalBtn">Регистрация</button>
+        </nav>
+    </header>
 
-<h1>Киселёв Денис Александрович группа 251-3210 лабораторная работа №1</h1>
+    <main>
+        <div id="userCard" class="user-card hidden">
+            <h3>Данные пользователя</h3>
+            <div id="cardContent"></div>
+        </div>
+    </main>
 
-<script src="script.js"></script>
+    <dialog id="modal">
+        <div class="modal-header">
+            <h2>Регистрация</h2>
+            <button class="close-btn" id="closeModalBtn" aria-label="Закрыть">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="registrationForm" novalidate>
+                <div class="form-group required">
+                    <label for="name">Имя</label>
+                    <input type="text" id="name" name="name" required pattern="[A-Za-zА-Яа-яЁё]{2,}" 
+                           autocomplete="name" aria-describedby="nameError">
+                    <div id="nameError" class="error-message" aria-live="polite" hidden></div>
+                </div>
 
+                <div class="form-group required">
+                    <label for="email">Электронная почта</label>
+                    <input type="email" id="email" name="email" required 
+                           autocomplete="email" aria-describedby="emailError">
+                    <div id="emailError" class="error-message" aria-live="polite" hidden></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone" name="phone" 
+                           autocomplete="tel" aria-describedby="phoneError">
+                    <div id="phoneError" class="error-message" aria-live="polite" hidden></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Возраст</label>
+                    <input type="number" id="age" name="age" min="1" max="99" 
+                           autocomplete="bday-year" aria-describedby="ageError">
+                    <div id="ageError" class="error-message" aria-live="polite" hidden></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="github">Ссылка на GitHub</label>
+                    <input type="url" id="github" name="github" 
+                           autocomplete="url" aria-describedby="githubError">
+                    <div id="githubError" class="error-message" aria-live="polite" hidden></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="githubDate">Дата регистрации на GitHub</label>
+                    <input type="date" id="githubDate" name="githubDate" 
+                           autocomplete="off" aria-describedby="githubDateError">
+                    <div id="githubDateError" class="error-message" aria-live="polite" hidden></div>
+                </div>
+
+                <div class="form-group required">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" required minlength="6" 
+                           autocomplete="new-password" aria-describedby="passwordError">
+                    <div id="passwordError" class="error-message" aria-live="polite" hidden></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">Зарегистрироваться</button>
+                    <button type="button" class="show-password-btn" id="showPasswordBtn">👁️ Показать пароль</button>
+                    <button type="button" class="close-form-btn" id="closeFormBtn">Закрыть</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <script src="script.js"></script>
 </body>
 </html>
