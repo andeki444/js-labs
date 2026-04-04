@@ -1,14 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Лабораторная работа №1</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лаб 4 - Promise</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1>Киселёв Денис Александрович группа 251-3210 лабораторная работа №1</h1>
-
-<script src="script.js"></script>
-
+    <div class="container">
+        <h1>Киселёв Денис - Тамагочи</h1>
+        
+        <div class="pet">
+            <img id="petImage" src="pets/pet-normal.png" alt="Питомец" class="pet-img">
+        </div>
+        
+        <div class="stats">
+            <p>🍖 Сытость: <span id="hunger">100</span></p>
+            <p>😊 Счастье: <span id="happiness">100</span></p>
+            <p>⚡ Энергия: <span id="energy">100</span></p>
+        </div>
+        
+        <div class="actions">
+            <button id="feedBtn">Покормить</button>
+            <button id="playBtn">Поиграть</button>
+            <button id="sleepBtn">Поспать</button>
+            <button id="trainBtn">Дрессировка</button>
+            <button id="catchBtn">Поймать</button>
+        </div>
+        
+        <div class="info">
+            <div>Очередь действий: <span id="queueCount">0</span>/3</div>
+            <div id="message"></div>
+        </div>
+        
+        <div class="debug">
+            <div id="debugToggle">🔧 Панель отладки ▼</div>
+            <div id="debugPanel" style="display: none;">
+                <div>
+                    <label>Скорость угасания (сек):</label>
+                    <input type="number" id="decaySpeed" value="5" min="1">
+                </div>
+                <div>
+                    <label>Шаг угасания:</label>
+                    <input type="number" id="decayStep" value="5" min="1">
+                </div>
+                <div>
+                    <label>Длительность действий (мс):</label>
+                    <input type="number" id="actionTime" value="2000" min="500">
+                </div>
+                <button id="resetGame">Перезапустить игру</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
 </body>
 </html>
