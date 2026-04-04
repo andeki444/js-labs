@@ -1,4 +1,4 @@
-// ================= LIKE (одна кнопка) =================
+// like
 
 const likeBtn = document.getElementById("likeBtn");
 const likeText = document.getElementById("likeText");
@@ -20,7 +20,7 @@ function handleLikeClick() {
 likeBtn.addEventListener("click", handleLikeClick);
 
 
-// ================= LIKE / DISLIKE =================
+// like/dislike
 
 const likeBtn2 = document.getElementById("likeBtn2");
 const dislikeBtn = document.getElementById("dislikeBtn");
@@ -66,7 +66,7 @@ likeBtn2.addEventListener("click", handleLike2Click);
 dislikeBtn.addEventListener("click", handleDislikeClick);
 
 
-// ================= КОРЗИНА =================
+// корзина
 
 const cartCount = document.getElementById("cartCount");
 const cardsContainer = document.getElementById("cards");
@@ -89,7 +89,7 @@ const products = [
   }
 ];
 
-/* список товаров в корзине */
+// список товаров
 let cartItems = [];
 
 function handleAddToCart(event) {
@@ -147,7 +147,7 @@ for (let i = 0; i < products.length; i++) {
   createCard(products[i]);
 }
 
-// ================= СОРТИРОВКА =================
+// сортировка
 
 const numbersWrapper = document.getElementById("numbersListWrapper");
 const sortAsc = document.getElementById("sortAsc");
@@ -203,7 +203,7 @@ sortReset.addEventListener("click", handleSortReset);
 renderNumbers(currentNumbers);
 
 
-// ================= ГАЛЕРЕЯ =================
+// галерея
 
 const gallery = document.getElementById("gallery");
 const copied = document.getElementById("copied");
