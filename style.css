@@ -1,4 +1,3 @@
-/* Базовые стили */
 * {
     margin: 0;
     padding: 0;
@@ -11,7 +10,6 @@ body {
     min-height: 100vh;
 }
 
-/* Шапка */
 .header {
     background-color: #2c3e50;
     color: white;
@@ -58,7 +56,6 @@ body {
     background-color: #219a52;
 }
 
-/* Модальное окно */
 #modal {
     padding: 0;
     border: none;
@@ -106,7 +103,6 @@ body {
     padding: 1.5rem;
 }
 
-/* Форма */
 .form-group {
     margin-bottom: 1.2rem;
     position: relative;
@@ -141,7 +137,6 @@ input:focus {
     border-color: #27ae60;
 }
 
-/* Стили для валидации */
 input:user-valid {
     border-color: #27ae60;
     background-color: #f0fff0;
@@ -152,7 +147,6 @@ input:user-invalid {
     background-color: #fff0f0;
 }
 
-/* Fallback для браузеров без :user-valid */
 input:valid {
     border-color: #27ae60;
 }
@@ -161,7 +155,6 @@ input:invalid {
     border-color: #e74c3c;
 }
 
-/* Сообщения об ошибках */
 .error-message {
     color: #e74c3c;
     font-size: 0.85rem;
@@ -174,7 +167,6 @@ input:invalid {
     display: none;
 }
 
-/* Кнопки формы */
 .form-actions {
     display: flex;
     gap: 0.8rem;
@@ -224,7 +216,6 @@ button {
     background-color: #c0392b;
 }
 
-/* Карточка пользователя */
 .user-card {
     background: white;
     border-radius: 8px;

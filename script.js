@@ -9,7 +9,7 @@ const passwordInput = document.getElementById('password');
 const userCard = document.getElementById('userCard');
 const cardContent = document.getElementById('cardContent');
 
-// --- Поля формы для валидации ---
+// поля формы для валидности
 const fields = 
 [
     { input: document.getElementById('name'), error: document.getElementById('nameError') },
@@ -20,8 +20,6 @@ const fields =
     { input: document.getElementById('githubDate'), error: document.getElementById('githubDateError') },
     { input: document.getElementById('password'), error: document.getElementById('passwordError') }
 ];
-
-// --- Вспомогательные функции ---
 
 function validatePhoneNumber(value) {
     if (value) return true;
@@ -117,7 +115,7 @@ function validateAllFields() {
     return allValid;
 }
 
-// --- Обработчики событий ---
+// оработчики событий
 
 function onOpenModalClick() {
     modal.showModal();
@@ -205,7 +203,6 @@ function onModalClose() {
     passwordInput.type = 'password';
 }
 
-// --- Добавление обработчиков ---
 openModalBtn.addEventListener('click', onOpenModalClick);
 closeModalBtn.addEventListener('click', onCloseModalClick);
 closeFormBtn.addEventListener('click', onCloseModalClick);
