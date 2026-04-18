@@ -1,173 +1,173 @@
-// 1. треугольник
-function triangle(a, b, c) {
+const API_URL = "http://95.163.242.125:80";
 
-  if (a + b > c && a + c > b && b + c > a) {
+const galleryContent = document.getElementById("galleryContent");
+const reloadGallery = document.getElementById("reloadGallery");
+const tempForm = document.getElementById("tempForm");
+const submitButton = document.getElementById("submitButton");
+const themeButton = document.getElementById("themeButton");
+const toastContainer = document.getElementById("toastContainer");
+const roomInput = document.getElementById("room");
+const temperatureInput = document.getElementById("temperature");
 
-    const perimeter = a + b + c;
-    const p = perimeter / 2;
-    const area = Math.sqrt(p * (p - a) * (p - b) * (p - c));
-    const ratio = perimeter / area;
+function removeToast(toast) {
+  toast.classList.remove("show");
 
-    console.log(`№1.\nтреугольник существует\nпериметр = ${perimeter}\nплощадь = ${area}\nсоотношение = ${ratio}`);
-
-  } else {
-    console.log("№1.\nтреугольника не существует");
-  }
+  setTimeout(() => {
+    toast.remove();
+  }, 300);
 }
 
-triangle(3, 4, 5);
+function createToast(message, type) {
+  const toast = document.createElement("div");
+  const closeButton = document.createElement("button");
 
+  toast.className = `toast ${type}`;
+  closeButton.type = "button";
+  closeButton.setAttribute("aria-label", "Закрыть уведомление");
+  closeButton.textContent = "×";
 
-// 2. физ баз
-function fizzBuzz(max) {
+  toast.append(document.createTextNode(message));
+  toast.append(closeButton);
 
-  for (let i = 0; i <= max; i++) {
+  toastContainer.append(toast);
 
-    if (i % 5 === 0 && i !== 0) {
-      console.log(`№2.\n ${i} fizz buzz`);
-    }
-    else if (i % 2 === 0) {
-      console.log(`№2.\n ${i} buzz`);
-    }
-    else {
-      console.log(`№2.\n ${i} fizz`);
-    }
+  requestAnimationFrame(() => {
+    toast.classList.add("show");
+  });
 
-  }
+  closeButton.addEventListener("click", () => {
+    removeToast(toast);
+  });
+
+  setTimeout(() => {
+    removeToast(toast);
+  }, 4000);
 }
 
-fizzBuzz(6);
-
-
-// 3. ёлка
-function tree(height) {
-
-  let result = "";
-
-  for (let i = 1; i <= height; i++) {
-
-    const symbol = (i % 2 === 0) ? "#" : "*";
-
-    for (let j = 0; j < i; j++) {
-      result = result + symbol;
-    }
-
-    result = result + "\n";
-  }
-
-  result = result + "||";
-
-  console.log("№3.\n" + result);
+function setLoader() {
+  galleryContent.innerHTML = '<div class="loader">Загрузка...</div>';
 }
 
-tree(6);
-
-
-// 4. деление
-function divide(n, x, y) {
-  return (n % x === 0 && n % y === 0);
+function setText(text) {
+  galleryContent.textContent = text;
 }
 
-const n = 12;
-const x = 2;
-const y = 6;
+function createCard(item) {
+  const card = document.createElement("article");
+  const imageWrapper = document.createElement("div");
+  const image = document.createElement("img");
+  const text = document.createElement("div");
 
-console.log(`№4.\n n = ${n}, x = ${x}, y = ${y} => ${divide(n, x, y)}`);
+  card.className = "card";
+  imageWrapper.className = "card-image";
+  text.className = "card-text";
 
+  image.src = item.url;
+  image.alt = item.name || "Изображение";
 
-// 5. сэндвичи
-function countSandwiches(obj) {
+  text.textContent = item.name || "Картинка";
 
-  const bread = obj.bread;
-  const cheese = obj.cheese;
+  imageWrapper.append(image);
+  card.append(imageWrapper);
+  card.append(text);
 
-  const byBread = Math.floor(bread / 2);
-
-  return (byBread < cheese) ? byBread : cheese;
+  return card;
 }
 
-console.log(`№5.\n ${countSandwiches({ bread: 5, cheese: 6 })}`);
-
-
-// 6. модуль
-function absValue(x) {
-  return (x < 0) ? -x : x;
-}
-
-console.log(`№6\n ${absValue(-2)}`);
-
-
-// 7. температура
-function convertTemperature(value, direction) {
-
-  switch (direction) {
-    case "toC":
-      return `${(value - 32) * 5 / 9} C`;
-    case "toF":
-      return `${value * 9 / 5 + 32} F`;
-    default:
-      return "Unknown direction";
+function renderGallery(items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    setText("Изображения не найдены");
+    return;
   }
 
+  const grid = document.createElement("div");
+
+  grid.className = "gallery-grid";
+
+  items.forEach((item) => {
+    grid.append(createCard(item));
+  });
+
+  galleryContent.innerHTML = "";
+  galleryContent.append(grid);
 }
 
-console.log(`№7.\n ${convertTemperature(32, "toC")}\n ${convertTemperature(10, "toF")}`);
+async function fetchGallery(attempt = 1) {
+  try {
+    setLoader();
 
+    const response = await fetch(`${API_URL}/images`);
 
-// 8. случайное число
-function randomNumber(min, max) {
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-
-}
-
-console.log(`№8.\n ${randomNumber(0, 10)}`);
-
-
-// 9. случайные элементы
-function sampleArray(arr, count) {
-
-  const result = [];
-
-  for (let i = 0; i < count; i++) {
-
-    const index = randomNumber(0, arr.length - 1);
-    result.push(arr[index]);
-
-  }
-
-  return result;
-}
-
-console.log(`№9.\n ${sampleArray([1, 2, 3, 4], 2)}`);
-
-
-// 10. свой фильтер
-function myFilterArray(arr, func) {
-
-  const result = [];
-
-  for (let i = 0; i < arr.length; i++) {
-
-    if (func(arr[i])) {
-      result.push(arr[i]);
+    if (!response.ok) {
+      throw new Error("Ошибка загрузки изображений");
     }
 
+    const data = await response.json();
+
+    renderGallery(data);
+  } catch {
+    if (attempt < 3) {
+      setTimeout(() => {
+        fetchGallery(attempt + 1);
+      }, 1000);
+
+      return;
+    }
+
+    setText("Не удалось загрузить изображения");
+    createToast("Ошибка загрузки галереи", "error");
   }
-
-  return result;
 }
 
-function isFirstV(name) {
-  return name.startsWith("V");
+async function submitTemperature(event) {
+  event.preventDefault();
+
+  const room = roomInput.value.trim();
+  const temperature = Number(temperatureInput.value.trim());
+
+  submitButton.disabled = true;
+
+  try {
+    const response = await fetch(`${API_URL}/temp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        room,
+        temperature
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Ошибка отправки");
+    }
+
+    createToast(data.message || "Данные отправлены", "success");
+    tempForm.reset();
+  } catch (error) {
+    createToast(error.message, "error");
+  } finally {
+    submitButton.disabled = false;
+  }
 }
 
-console.log(`№10.\n ${myFilterArray(["Vasya", "Anna"], isFirstV)}`);
+function toggleTheme() {
+  document.documentElement.classList.toggle("dark");
 
+  const isDarkTheme =
+    document.documentElement.classList.contains("dark");
 
-// 11. плавающая запятая
-function toBeCloseTo(num1, num2) {
-  return Math.abs(num1 - num2) < Number.EPSILON;
+  localStorage.setItem(
+    "theme",
+    isDarkTheme ? "dark" : "light"
+  );
 }
 
-console.log(`№11.\n ${toBeCloseTo(0.1 + 0.2, 0.3)}`);
+reloadGallery.addEventListener("click", fetchGallery);
+tempForm.addEventListener("submit", submitTemperature);
+themeButton.addEventListener("click", toggleTheme);
+
+fetchGallery();
