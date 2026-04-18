@@ -90,7 +90,7 @@ const products = [
 ];
 
 // список товаров
-let cartItems = [];
+const cartItems = [];
 
 function handleAddToCart(event) {
 
@@ -143,8 +143,8 @@ function createCard(product) {
   cardsContainer.appendChild(card);
 }
 
-for (let i = 0; i < products.length; i++) {
-  createCard(products[i]);
+for (const product of products) {
+  createCard(product);
 }
 
 // сортировка
@@ -168,9 +168,9 @@ function renderNumbers(arr) {
 
   const ul = document.createElement("ul");
 
-  for (let i = 0; i < arr.length; i++) {
+  for (const number of arr) {
     const li = document.createElement("li");
-    li.textContent = arr[i];
+    li.textContent = number;
     ul.appendChild(li);
   }
 
@@ -178,16 +178,12 @@ function renderNumbers(arr) {
 }
 
 function handleSortAsc() {
-  currentNumbers = currentNumbers.slice().sort(function(a, b) {
-    return a - b;
-  });
+  currentNumbers = currentNumbers.slice().sort((a, b) => a - b);
   renderNumbers(currentNumbers);
 }
 
 function handleSortDesc() {
-  currentNumbers = currentNumbers.slice().sort(function(a, b) {
-    return b - a;
-  });
+  currentNumbers = currentNumbers.slice().sort((a, b) => b - a);
   renderNumbers(currentNumbers);
 }
 
@@ -221,38 +217,68 @@ function updateButtons() {
 
 function updateNumbers() {
   const photos = gallery.querySelectorAll(".photo");
+  const copiedPhotos = copied.querySelectorAll(".photo");
+  const allPhotos = [...photos, ...copiedPhotos];
 
-  for (let i = 0; i < photos.length; i++) {
-    const badge = photos[i].querySelector(".badge");
+  // Удаляем все существующие бейджи
+  for (const photo of allPhotos) {
+    const badge = photo.querySelector(".badge");
     if (badge) {
-      photos[i].removeChild(badge);
+      photo.removeChild(badge);
     }
   }
 
-  for (let i = 0; i < selected.length; i++) {
+  let number = 1;
+
+  for (const photo of selected) {
     const badge = document.createElement("span");
     badge.className = "badge";
-    badge.textContent = i + 1;
-    selected[i].appendChild(badge);
+    badge.textContent = number;
+
+    // Используем сохраненные координаты клика
+    if (photo.clickX !== undefined && photo.clickY !== undefined) {
+      badge.style.left = `${photo.clickX}px`;
+      badge.style.top = `${photo.clickY}px`;
+      badge.style.transform = "translate(-50%, -50%)"; // Центрируем бейдж по точке клика
+    } else {
+      // Если координат нет (например, при длинном нажатии), ставим в центр
+      badge.style.left = "50%";
+      badge.style.top = "50%";
+      badge.style.transform = "translate(-50%, -50%)";
+    }
+
+    photo.appendChild(badge);
+    number++;
   }
 }
 
 function handlePhotoClick(event) {
   const el = event.currentTarget;
 
-  if (!selectionMode) return;
+  if (!selectionMode) {
+    return;
+  }
 
   const index = selected.indexOf(el);
 
   if (index !== -1) {
+    // Убираем из выбранных
     selected.splice(index, 1);
     el.classList.remove("active");
-    if (selected.length === 0) {
-      selectionMode = false;
-    }
+    delete el.clickX;
+    delete el.clickY;
   } else {
+    // Сохраняем координаты клика относительно photo
+    const rect = el.getBoundingClientRect();
+    el.clickX = event.clientX - rect.left;
+    el.clickY = event.clientY - rect.top;
+
     selected.push(el);
     el.classList.add("active");
+  }
+
+  if (selected.length === 0) {
+    selectionMode = false;
   }
 
   updateNumbers();
@@ -262,11 +288,17 @@ function handlePhotoClick(event) {
 function handleLongPress(event) {
   const el = event.currentTarget;
 
-  if (selectionMode) return;
+  if (selectionMode) {
+    return;
+  }
 
   selectionMode = true;
   selected = [el];
   el.classList.add("active");
+
+  // Для длинного нажатия координаты не сохраняем — бейдж будет по центру
+  delete el.clickX;
+  delete el.clickY;
 
   updateNumbers();
   updateButtons();
@@ -276,7 +308,7 @@ function addLongPress(el) {
   let timer = null;
 
   function onMouseDown() {
-    timer = setTimeout(function() {
+    timer = setTimeout(() => {
       handleLongPress({ currentTarget: el });
     }, 1000);
   }
@@ -303,14 +335,13 @@ const galleryImages = [
   "img/gallery10.jpg"
 ];
 
-for (let i = 0; i < galleryImages.length; i++) {
-
+for (const imagePath of galleryImages) {
   const photo = document.createElement("div");
   photo.className = "photo";
 
   const img = document.createElement("img");
-  img.src = galleryImages[i];
-  img.alt = "Фото " + (i + 1);
+  img.src = imagePath;
+  img.alt = "Фото";
 
   photo.appendChild(img);
   gallery.appendChild(photo);
@@ -320,20 +351,26 @@ for (let i = 0; i < galleryImages.length; i++) {
 }
 
 function handleDelete() {
-  for (let i = 0; i < selected.length; i++) {
-    selected[i].remove();
+  for (const photo of selected) {
+    photo.removeEventListener("click", handlePhotoClick);
+    photo.remove();
   }
+
   selected = [];
   selectionMode = false;
+
   updateButtons();
 }
 
 function handleMove() {
-  for (let i = 0; i < selected.length; i++) {
-    copied.appendChild(selected[i]);
+  for (const photo of selected) {
+    copied.appendChild(photo);
+    // При перемещении оставляем класс active и координаты
   }
-  selected = [];
-  selectionMode = false;
+
+  // Не сбрасываем selected и selectionMode, чтобы можно было продолжить работу
+  // Но обновляем номера, так как порядок мог измениться
+  updateNumbers();
   updateButtons();
 }
 
