@@ -1,173 +1,176 @@
-// 1. треугольник
-function triangle(a, b, c) {
+const runTestsBtn = document.getElementById("runTestsBtn");
+const resultsTableBody = document.querySelector("#resultsTable tbody");
+const statusDiv = document.getElementById("status");
 
-  if (a + b > c && a + c > b && b + c > a) {
+function mean(arr) {
+  return arr.reduce((a,b)=>a+b,0)/arr.length;
+}
 
-    const perimeter = a + b + c;
-    const p = perimeter / 2;
-    const area = Math.sqrt(p * (p - a) * (p - b) * (p - c));
-    const ratio = perimeter / area;
+function std(arr, avg) {
+  const variance = arr.reduce((a,b)=>a + (b-avg)**2,0)/(arr.length-1);
+  return Math.sqrt(variance);
+}
 
-    console.log(`№1.\nтреугольник существует\nпериметр = ${perimeter}\nплощадь = ${area}\nсоотношение = ${ratio}`);
+function ci95(avg, sigma, n) {
+  const z = 1.96;
+  const margin = z*sigma/Math.sqrt(n);
+  return [avg-margin, avg+margin];
+}
 
-  } else {
-    console.log("№1.\nтреугольника не существует");
+// методы добавления
+function addAppendChild(container, n) {
+  for(let i=0;i<n;i++){
+    const div = document.createElement("div");
+    div.textContent=i;
+    container.appendChild(div);
   }
 }
 
-triangle(3, 4, 5);
+function addFragment(container, n) {
+  const frag = document.createDocumentFragment();
+  for(let i=0;i<n;i++){
+    const div = document.createElement("div");
+    div.textContent=i;
+    frag.appendChild(div);
+  }
+  container.appendChild(frag);
+}
 
+function addInnerHTML(container, n) {
+  let html = "";
+  for(let i=0;i<n;i++){
+    html += `<div>${i}</div>`;
+  }
+  container.innerHTML = html;
+}
 
-// 2. физ баз
-function fizzBuzz(max) {
+function addInsertAdjacentHTML(container, n) {
+  for(let i=0;i<n;i++){
+    container.insertAdjacentHTML("beforeend", `<div>${i}</div>`);
+  }
+}
 
-  for (let i = 0; i <= max; i++) {
+// методы очистки
+function clearInnerHTML(container){ container.innerHTML=""; }
+function clearRemoveChild(container){ while(container.firstChild) {container.removeChild(container.firstChild);} }
+function clearReplaceChildren(container){ container.replaceChildren(); }
 
-    if (i % 5 === 0 && i !== 0) {
-      console.log(`№2.\n ${i} fizz buzz`);
+function runBenchmark(methodName, methodFunc, iterations, n){
+  const results=[];
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+
+  // прогрев
+  for(let i=0;i<5;i++){ container.innerHTML=""; methodFunc(container, n); }
+
+  for(let i=0;i<iterations;i++){
+    container.innerHTML="";
+    const start = performance.now();
+    methodFunc(container, n);
+    const end = performance.now();
+    results.push(end-start);
+  }
+
+  container.remove();
+
+  const avg = mean(results);
+  const sigma = std(results, avg);
+  const ci = ci95(avg, sigma, iterations);
+
+  return {methodName,n,iterations,avg,sigma,ci};
+}
+
+function runClearBenchmark(methodName, methodFunc, iterations, n){
+  const results=[];
+  const container = document.createElement("div");
+  document.body.appendChild(container);
+
+  // прогрев
+  for(let i=0;i<5;i++){
+    container.innerHTML="";
+    for(let j=0;j<n;j++){
+      const div = document.createElement("div");
+      div.textContent=j;
+      container.appendChild(div);
     }
-    else if (i % 2 === 0) {
-      console.log(`№2.\n ${i} buzz`);
+    methodFunc(container);
+  }
+
+  for(let i=0;i<iterations;i++){
+    container.innerHTML="";
+    for(let j=0;j<n;j++){
+      const div = document.createElement("div");
+      div.textContent=j;
+      container.appendChild(div);
     }
-    else {
-      console.log(`№2.\n ${i} fizz`);
-    }
-
-  }
-}
-
-fizzBuzz(6);
-
-
-// 3. ёлка
-function tree(height) {
-
-  let result = "";
-
-  for (let i = 1; i <= height; i++) {
-
-    const symbol = (i % 2 === 0) ? "#" : "*";
-
-    for (let j = 0; j < i; j++) {
-      result = result + symbol;
-    }
-
-    result = result + "\n";
+    const start = performance.now();
+    methodFunc(container);
+    const end = performance.now();
+    results.push(end-start);
   }
 
-  result = result + "||";
+  container.remove();
 
-  console.log("№3.\n" + result);
+  const avg = mean(results);
+  const sigma = std(results, avg);
+  const ci = ci95(avg, sigma, iterations);
+
+  return {methodName,n,iterations,avg,sigma,ci};
 }
 
-tree(6);
+async function runAllBenchmarks(){
+  statusDiv.textContent="Тестирование...";
+  resultsTableBody.innerHTML="";
 
+  const addMethods = [
+    {name:"appendChild",func:addAppendChild},
+    {name:"DocumentFragment",func:addFragment},
+    {name:"innerHTML",func:addInnerHTML},
+    {name:"insertAdjacentHTML",func:addInsertAdjacentHTML}
+  ];
 
-// 4. деление
-function divide(n, x, y) {
-  return (n % x === 0 && n % y === 0);
-}
+  const clearMethods = [
+    {name:"innerHTML",func:clearInnerHTML},
+    {name:"removeChild",func:clearRemoveChild},
+    {name:"replaceChildren",func:clearReplaceChildren}
+  ];
 
-const n = 12;
-const x = 2;
-const y = 6;
+  const sampleSizes=[1000,10000];
+  const iterations=30;
 
-console.log(`№4.\n n = ${n}, x = ${x}, y = ${y} => ${divide(n, x, y)}`);
-
-
-// 5. сэндвичи
-function countSandwiches(obj) {
-
-  const bread = obj.bread;
-  const cheese = obj.cheese;
-
-  const byBread = Math.floor(bread / 2);
-
-  return (byBread < cheese) ? byBread : cheese;
-}
-
-console.log(`№5.\n ${countSandwiches({ bread: 5, cheese: 6 })}`);
-
-
-// 6. модуль
-function absValue(x) {
-  return (x < 0) ? -x : x;
-}
-
-console.log(`№6\n ${absValue(-2)}`);
-
-
-// 7. температура
-function convertTemperature(value, direction) {
-
-  switch (direction) {
-    case "toC":
-      return `${(value - 32) * 5 / 9} C`;
-    case "toF":
-      return `${value * 9 / 5 + 32} F`;
-    default:
-      return "Unknown direction";
-  }
-
-}
-
-console.log(`№7.\n ${convertTemperature(32, "toC")}\n ${convertTemperature(10, "toF")}`);
-
-
-// 8. случайное число
-function randomNumber(min, max) {
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-
-}
-
-console.log(`№8.\n ${randomNumber(0, 10)}`);
-
-
-// 9. случайные элементы
-function sampleArray(arr, count) {
-
-  const result = [];
-
-  for (let i = 0; i < count; i++) {
-
-    const index = randomNumber(0, arr.length - 1);
-    result.push(arr[index]);
-
-  }
-
-  return result;
-}
-
-console.log(`№9.\n ${sampleArray([1, 2, 3, 4], 2)}`);
-
-
-// 10. свой фильтер
-function myFilterArray(arr, func) {
-
-  const result = [];
-
-  for (let i = 0; i < arr.length; i++) {
-
-    if (func(arr[i])) {
-      result.push(arr[i]);
+  for(const n of sampleSizes){
+    for(const m of addMethods){
+      const r = runBenchmark(m.name, m.func, iterations, n);
+      const row=document.createElement("tr");
+      row.innerHTML=`
+        <td>${r.methodName} (add)</td>
+        <td>${r.n}</td>
+        <td>${r.iterations}</td>
+        <td>${r.avg.toFixed(3)}</td>
+        <td>${r.sigma.toFixed(3)}</td>
+        <td>${r.ci[0].toFixed(3)} - ${r.ci[1].toFixed(3)}</td>
+      `;
+      resultsTableBody.appendChild(row);
+      await new Promise(res=>setTimeout(res,50));
     }
 
+    for(const m of clearMethods){
+      const r = runClearBenchmark(m.name, m.func, iterations, n);
+      const row=document.createElement("tr");
+      row.innerHTML=`
+        <td>${r.methodName} (clear)</td>
+        <td>${r.n}</td>
+        <td>${r.iterations}</td>
+        <td>${r.avg.toFixed(3)}</td>
+        <td>${r.sigma.toFixed(3)}</td>
+        <td>${r.ci[0].toFixed(3)} - ${r.ci[1].toFixed(3)}</td>
+      `;
+      resultsTableBody.appendChild(row);
+      await new Promise(res=>setTimeout(res,50));
+    }
   }
 
-  return result;
+  statusDiv.textContent="Готово!";
 }
 
-function isFirstV(name) {
-  return name.startsWith("V");
-}
-
-console.log(`№10.\n ${myFilterArray(["Vasya", "Anna"], isFirstV)}`);
-
-
-// 11. плавающая запятая
-function toBeCloseTo(num1, num2) {
-  return Math.abs(num1 - num2) < Number.EPSILON;
-}
-
-console.log(`№11.\n ${toBeCloseTo(0.1 + 0.2, 0.3)}`);
+runTestsBtn.addEventListener("click", runAllBenchmarks);

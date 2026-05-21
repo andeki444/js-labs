@@ -1,14 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Лабораторная работа №1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Киселёв Денис Александрович - Лабораторная работа №7</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <h1>Киселёв Денис Александрович - Лабораторная работа №7</h1>
 
-<h1>Киселёв Денис Александрович группа 251-3210 лабораторная работа №1</h1>
+  <div class="container">
+    <button id="runTestsBtn">Запустить тесты</button>
+    <div id="status"></div>
 
-<script src="script.js"></script>
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>Метод</th>
+          <th>Кол-во элементов</th>
+          <th>Итерации</th>
+          <th>Среднее (мс)</th>
+          <th>σ (мс)</th>
+          <th>CI 95%</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
+  <script src="script.js"></script>
 </body>
 </html>

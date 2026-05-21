@@ -1,0 +1,29 @@
+body { 
+  font-family: Arial, sans-serif; 
+  padding: 2rem; 
+}
+
+h1 { 
+  margin-bottom: 2rem; 
+}
+
+.container { 
+  margin-top: 2rem; 
+}
+
+button { 
+  margin: 0.5rem; 
+  padding: 0.5rem 1rem; 
+}
+
+table { 
+  border-collapse: collapse; 
+  width: 100%; 
+  margin-top: 1rem; 
+}
+
+th, td { 
+  border: 1px solid #333; 
+  padding: 6px 10px; 
+  text-align: center; 
+}
