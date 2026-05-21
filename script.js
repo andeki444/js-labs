@@ -1,173 +1,87 @@
-// 1. треугольник
-function triangle(a, b, c) {
+// первый сценарий
 
-  if (a + b > c && a + c > b && b + c > a) {
+const container1 = document.getElementById("container1");
+const startLeak1Btn = document.getElementById("startLeak1");
+const stopLeak1Btn = document.getElementById("stopLeak1");
+let cards1 = [];
 
-    const perimeter = a + b + c;
-    const p = perimeter / 2;
-    const area = Math.sqrt(p * (p - a) * (p - b) * (p - c));
-    const ratio = perimeter / area;
+function createCard1(i) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.textContent = `Карточка ${i}`;
 
-    console.log(`№1.\nтреугольник существует\nпериметр = ${perimeter}\nплощадь = ${area}\nсоотношение = ${ratio}`);
-
-  } else {
-    console.log("№1.\nтреугольника не существует");
+  // обработчик на глобальном объекте window
+  function handler() {
+    card.style.background = "#ffdddd";
   }
+  window.addEventListener("scroll", handler);
+
+  return card;
 }
 
-triangle(3, 4, 5);
-
-
-// 2. физ баз
-function fizzBuzz(max) {
-
-  for (let i = 0; i <= max; i++) {
-
-    if (i % 5 === 0 && i !== 0) {
-      console.log(`№2.\n ${i} fizz buzz`);
-    }
-    else if (i % 2 === 0) {
-      console.log(`№2.\n ${i} buzz`);
-    }
-    else {
-      console.log(`№2.\n ${i} fizz`);
-    }
-
+startLeak1Btn.addEventListener("click", () => {
+  for(let i=0;i<100;i++){
+    const card = createCard1(i);
+    container1.appendChild(card);
+    cards1.push(card);
   }
-}
+});
 
-fizzBuzz(6);
+stopLeak1Btn.addEventListener("click", () => {
+  cards1.forEach(card => container1.removeChild(card));
+  cards1 = [];
+});
 
+// второй сценарий
 
-// 3. ёлка
-function tree(height) {
+const container2 = document.getElementById("container2");
+const startLeak2Btn = document.getElementById("startLeak2");
+const stopLeak2Btn = document.getElementById("stopLeak2");
+const globalCache = []; // глобальный массив
 
-  let result = "";
-
-  for (let i = 1; i <= height; i++) {
-
-    const symbol = (i % 2 === 0) ? "#" : "*";
-
-    for (let j = 0; j < i; j++) {
-      result = result + symbol;
-    }
-
-    result = result + "\n";
+startLeak2Btn.addEventListener("click", () => {
+  for(let i=0;i<100;i++){
+    const card = document.createElement("div");
+    card.className="card";
+    card.textContent=`Карточка ${i}`;
+    container2.appendChild(card);
+    globalCache.push(card); // сохраняем ссылку глобально
   }
+});
 
-  result = result + "||";
+stopLeak2Btn.addEventListener("click", () => {
+  container2.innerHTML = ""; // удаляем DOM, но глобальный массив нет, иначе произойдет утечка
+});
 
-  console.log("№3.\n" + result);
+// третий сценарий
+
+const container3 = document.getElementById("container3");
+const startLeak3Btn = document.getElementById("startLeak3");
+const stopLeak3Btn = document.getElementById("stopLeak3");
+const intervals = [];
+
+function createCard3(i){
+  const card = document.createElement("div");
+  card.className="card";
+  card.textContent=`Карточка ${i}`;
+  container3.appendChild(card);
+
+  // таймер, который использует DOM-элемент
+  const id = setInterval(()=>{
+    card.style.color = card.style.color==="red"?"blue":"red";
+  },1000);
+  intervals.push(id);
+
+  return card;
 }
 
-tree(6);
-
-
-// 4. деление
-function divide(n, x, y) {
-  return (n % x === 0 && n % y === 0);
-}
-
-const n = 12;
-const x = 2;
-const y = 6;
-
-console.log(`№4.\n n = ${n}, x = ${x}, y = ${y} => ${divide(n, x, y)}`);
-
-
-// 5. сэндвичи
-function countSandwiches(obj) {
-
-  const bread = obj.bread;
-  const cheese = obj.cheese;
-
-  const byBread = Math.floor(bread / 2);
-
-  return (byBread < cheese) ? byBread : cheese;
-}
-
-console.log(`№5.\n ${countSandwiches({ bread: 5, cheese: 6 })}`);
-
-
-// 6. модуль
-function absValue(x) {
-  return (x < 0) ? -x : x;
-}
-
-console.log(`№6\n ${absValue(-2)}`);
-
-
-// 7. температура
-function convertTemperature(value, direction) {
-
-  switch (direction) {
-    case "toC":
-      return `${(value - 32) * 5 / 9} C`;
-    case "toF":
-      return `${value * 9 / 5 + 32} F`;
-    default:
-      return "Unknown direction";
+startLeak3Btn.addEventListener("click", ()=>{
+  for(let i=0;i<20;i++){
+    createCard3(i);
   }
+});
 
-}
-
-console.log(`№7.\n ${convertTemperature(32, "toC")}\n ${convertTemperature(10, "toF")}`);
-
-
-// 8. случайное число
-function randomNumber(min, max) {
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-
-}
-
-console.log(`№8.\n ${randomNumber(0, 10)}`);
-
-
-// 9. случайные элементы
-function sampleArray(arr, count) {
-
-  const result = [];
-
-  for (let i = 0; i < count; i++) {
-
-    const index = randomNumber(0, arr.length - 1);
-    result.push(arr[index]);
-
-  }
-
-  return result;
-}
-
-console.log(`№9.\n ${sampleArray([1, 2, 3, 4], 2)}`);
-
-
-// 10. свой фильтер
-function myFilterArray(arr, func) {
-
-  const result = [];
-
-  for (let i = 0; i < arr.length; i++) {
-
-    if (func(arr[i])) {
-      result.push(arr[i]);
-    }
-
-  }
-
-  return result;
-}
-
-function isFirstV(name) {
-  return name.startsWith("V");
-}
-
-console.log(`№10.\n ${myFilterArray(["Vasya", "Anna"], isFirstV)}`);
-
-
-// 11. плавающая запятая
-function toBeCloseTo(num1, num2) {
-  return Math.abs(num1 - num2) < Number.EPSILON;
-}
-
-console.log(`№11.\n ${toBeCloseTo(0.1 + 0.2, 0.3)}`);
+stopLeak3Btn.addEventListener("click", ()=>{
+  container3.innerHTML = ""; 
+  // намеренно не останавливаем таймеры, иначе произойдет утечка через closure
+});

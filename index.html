@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Лабораторная работа №1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Киселёв Денис Александрович - Лабораторная работа №8</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <h1>Киселёв Денис Александрович - Лабораторная работа №8</h1>
 
-<h1>Киселёв Денис Александрович группа 251-3210 лабораторная работа №1</h1>
+  <section>
+    <h2>Сценарий 1: Забытые обработчики событий</h2>
+    <button id="startLeak1">Запустить</button>
+    <button id="stopLeak1">Очистить (не удаляем обработчики)</button>
+    <div id="container1"></div>
+  </section>
 
-<script src="script.js"></script>
+  <section>
+    <h2>Сценарий 2: Сохранение DOM-узлов в глобальных структурах</h2>
+    <button id="startLeak2">Запустить</button>
+    <button id="stopLeak2">Очистить (не очищаем массив)</button>
+    <div id="container2"></div>
+  </section>
 
+  <section>
+    <h2>Сценарий 3: Утечка через замыкания (closures)</h2>
+    <button id="startLeak3">Запустить</button>
+    <button id="stopLeak3">Очистить (не останавливаем таймер)</button>
+    <div id="container3"></div>
+  </section>
+
+  <script src="script.js"></script>
 </body>
 </html>
